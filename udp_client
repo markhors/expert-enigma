@@ -1,0 +1,55 @@
+package main
+
+import(
+"net"
+	"fmt"
+	"bytes"
+	"log"
+)
+
+func main()  {
+
+
+
+	connection,error2:=net.Dial("udp","127.0.0.1:5002")
+	if error2!=nil{
+		log.Fatal(error2)
+
+	}
+	fmt.Println("here it is ")
+
+	defer  connection.Close()
+	sendMessagetoServer(connection)
+
+
+
+
+
+}
+func sendMessagetoServer(con net.Conn)  {
+
+	buf:=[]byte("Hello this is client")
+	_,errorbuf:=con.Write(buf)
+
+	if errorbuf!=nil{
+		log.Fatal(errorbuf)
+
+	}
+
+
+	bufferreader:=make([]byte,1024)
+	_,buffError:=con.Read(bufferreader)
+	if buffError!=nil{
+		log.Fatal(buffError)
+      }
+
+
+	n:=bytes.Index(bufferreader,[]byte{0})
+	message:=string(bufferreader[0:n-1])
+	fmt.Println("This is message from server ",message)
+
+	fmt.Println(message)
+
+
+}
+
